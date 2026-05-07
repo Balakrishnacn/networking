@@ -8,7 +8,7 @@ on:
 
 jobs:
   terraform:
-    name: Terraform Plan
+    name: Terraform Plan & Apply
     runs-on: ubuntu-latest
 
     steps:
@@ -24,10 +24,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      # Verify AWS identity (IMPORTANT DEBUG STEP)
+      # Verify AWS identity
       - name: Verify AWS identity
-        run: |
-          aws sts get-caller-identity
+        run: aws sts get-caller-identity
 
       # Install Terraform
       - name: Setup Terraform
@@ -37,20 +36,25 @@ jobs:
 
       # Terraform Init
       - name: Terraform Init
+        working-directory: Infra
         run: terraform init
 
       # Terraform Format Check
       - name: Terraform Format Check
+        working-directory: Infra
         run: terraform fmt -check
 
+      # Terraform Validate
       - name: Terraform Validate
         working-directory: Infra
         run: terraform validate
 
+      # Terraform Plan
       - name: Terraform Plan
         working-directory: Infra
         run: terraform plan
 
+      # Terraform Apply (only on main branch push)
       - name: Terraform Apply
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         working-directory: Infra
