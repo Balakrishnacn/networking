@@ -1,6 +1,7 @@
 variable "aws_region" {
-  type    = string
-  default = "ap-south-1"
+  description = "AWS Region"
+  type        = string
+  default     = "us-east-1"
 }
 
 variable "key_pair_name" {
@@ -9,6 +10,6 @@ variable "key_pair_name" {
 }
 
 variable "my_ip" {
-  description = "Your public IP for SSH (x.x.x.x/32)"
+  description = "Public IP for SSH"
   type        = string
 }
