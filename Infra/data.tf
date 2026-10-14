@@ -1,5 +1,8 @@
 data "aws_ami" "ubuntu" {
+
   most_recent = true
+
+  owners = ["099720109477"]
 
   filter {
     name   = "name"
@@ -10,6 +13,4 @@ data "aws_ami" "ubuntu" {
     name   = "virtualization-type"
     values = ["hvm"]
   }
-
-  owners = ["099720109477"] # Canonical
 }
