@@ -9,6 +9,10 @@ resource "aws_vpc" "destination" {
 resource "aws_subnet" "destination_subnet" {
   vpc_id                  = aws_vpc.destination.id
   cidr_block              = "172.16.1.0/24"
-  availability_zone       = "${var.aws_region}b"
+  availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
+
+  tags = {
+    Name = "destination-subnet"
+  }
 }
