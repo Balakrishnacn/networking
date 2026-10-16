@@ -1,5 +1,4 @@
 resource "aws_security_group" "source_sg" {
-
   name   = "source-sg"
   vpc_id = aws_vpc.source_vpc.id
 
@@ -14,6 +13,7 @@ resource "aws_security_group" "source_sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
+
     cidr_blocks = [
       "172.16.0.0/16",
       "192.168.0.0/16"
@@ -26,10 +26,13 @@ resource "aws_security_group" "source_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "source-sg"
+  }
 }
 
 resource "aws_security_group" "destination_sg" {
-
   name   = "destination-sg"
   vpc_id = aws_vpc.destination_vpc.id
 
@@ -44,6 +47,7 @@ resource "aws_security_group" "destination_sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
+
     cidr_blocks = [
       "10.0.0.0/16",
       "192.168.0.0/16"
@@ -56,10 +60,13 @@ resource "aws_security_group" "destination_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "destination-sg"
+  }
 }
 
 resource "aws_security_group" "test_sg" {
-
   name   = "test-sg"
   vpc_id = aws_vpc.test_vpc.id
 
@@ -74,6 +81,7 @@ resource "aws_security_group" "test_sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
+
     cidr_blocks = [
       "10.0.0.0/16",
       "172.16.0.0/16"
@@ -85,5 +93,9 @@ resource "aws_security_group" "test_sg" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "test-sg"
   }
 }
