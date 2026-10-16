@@ -4,20 +4,26 @@ resource "aws_security_group" "source_sg" {
   vpc_id = aws_vpc.source_vpc.id
 
   ingress {
-
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
-
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = [var.my_ip]
   }
 
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = [
+      "172.16.0.0/16",
+      "192.168.0.0/16"
+    ]
+  }
+
   egress {
-
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
-
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -28,31 +34,56 @@ resource "aws_security_group" "destination_sg" {
   vpc_id = aws_vpc.destination_vpc.id
 
   ingress {
-
-    description = "HTTP from source VPC"
-
-    from_port = 80
-    to_port   = 80
-    protocol  = "tcp"
-
-    cidr_blocks = ["10.0.0.0/16"]
-  }
-
-  ingress {
-
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
-
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = [var.my_ip]
   }
 
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = [
+      "10.0.0.0/16",
+      "192.168.0.0/16"
+    ]
+  }
+
   egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
 
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
+resource "aws_security_group" "test_sg" {
 
+  name   = "test-sg"
+  vpc_id = aws_vpc.test_vpc.id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.my_ip]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = [
+      "10.0.0.0/16",
+      "172.16.0.0/16"
+    ]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
