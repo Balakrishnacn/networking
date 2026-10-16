@@ -1,6 +1,7 @@
 resource "aws_security_group" "source_sg" {
-  name   = "source-sg"
-  vpc_id = aws_vpc.source_vpc.id
+  name        = "source-sg"
+  description = "Source Security Group"
+  vpc_id      = aws_vpc.source_vpc.id
 
   ingress {
     from_port   = 22
@@ -33,8 +34,9 @@ resource "aws_security_group" "source_sg" {
 }
 
 resource "aws_security_group" "destination_sg" {
-  name   = "destination-sg"
-  vpc_id = aws_vpc.destination_vpc.id
+  name        = "destination-sg"
+  description = "Destination Security Group"
+  vpc_id      = aws_vpc.destination_vpc.id
 
   ingress {
     from_port   = 22
@@ -67,8 +69,9 @@ resource "aws_security_group" "destination_sg" {
 }
 
 resource "aws_security_group" "test_sg" {
-  name   = "test-sg"
-  vpc_id = aws_vpc.test_vpc.id
+  name        = "test-sg"
+  description = "Test Security Group"
+  vpc_id      = aws_vpc.test_vpc.id
 
   ingress {
     from_port   = 22
