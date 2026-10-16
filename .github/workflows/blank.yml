@@ -42,12 +42,7 @@ jobs:
       # Terraform Format Check
       - name: Terraform Format Check
         working-directory: Infra
-        run: terraform fmt -check
-
-      # Terraform Format Check
-      - name: Terraform Format Check
         run: terraform fmt -check -recursive
-        working-directory: Infra
 
       # Terraform Validate
       - name: Terraform Validate
@@ -59,7 +54,7 @@ jobs:
         working-directory: Infra
         run: terraform plan
 
-      # Terraform Apply (only on main branch push)
+      # Terraform Apply
       - name: Terraform Apply
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         working-directory: Infra
