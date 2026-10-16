@@ -44,6 +44,11 @@ jobs:
         working-directory: Infra
         run: terraform fmt -check
 
+      # Terraform Format Check
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+        working-directory: Infra
+
       # Terraform Validate
       - name: Terraform Validate
         working-directory: Infra
