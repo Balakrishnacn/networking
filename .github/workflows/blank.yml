@@ -38,6 +38,10 @@ jobs:
       - name: Terraform Init
         working-directory: Infra
         run: terraform init
+        
+      - name: Show Formatting Differences
+        working-directory: Infra
+        run: terraform fmt -recursive -diff
 
       # Terraform Format Check
       - name: Terraform Format Check
