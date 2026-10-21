@@ -1,4 +1,4 @@
 aws_region    = "us-east-1"
 key_pair_name = "trail-01"
-my_ip         = "167.103.74.189/32"
+my_ip         = "136.226.242.115/32"
 
