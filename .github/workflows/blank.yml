@@ -59,7 +59,7 @@ jobs:
         run: terraform plan
 
       # Terraform Apply
-      - name: Terraform destroy
+      - name: Terraform apply
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         working-directory: Infra
-        run: terraform destroy -auto-approve
+        run: terraform apply -auto-approve
