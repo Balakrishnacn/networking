@@ -15,5 +15,5 @@ output "destination2_private_ip" {
 }
 
 output "test1_private_ip" {
-  value = aws_instance.test1.private_ip
+  value = aws_instance.networking1.private_ip
 }

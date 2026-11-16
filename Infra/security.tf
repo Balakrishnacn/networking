@@ -68,10 +68,10 @@ resource "aws_security_group" "destination_sg" {
   }
 }
 
-resource "aws_security_group" "test_sg" {
-  name        = "test-sg"
-  description = "Test Security Group"
-  vpc_id      = aws_vpc.test_vpc.id
+resource "aws_security_group" "networking_sg" {
+  name        = "networking-sg"
+  description = "Networking Security Group"
+  vpc_id      = aws_vpc.networking_vpc.id
 
   ingress {
     from_port   = 22
@@ -99,6 +99,6 @@ resource "aws_security_group" "test_sg" {
   }
 
   tags = {
-    Name = "test-sg"
+    Name = "networking-sg"
   }
 }
