@@ -11,13 +11,13 @@ resource "aws_security_group" "source_sg" {
   }
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
+    from_port = 80
+    to_port   = 80
+    protocol  = "tcp"
 
     cidr_blocks = [
       "172.16.0.0/16",
-      "192.168.0.0/16"
+      "192.168.0.0/16",
     ]
   }
 
@@ -46,13 +46,13 @@ resource "aws_security_group" "destination_sg" {
   }
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
+    from_port = 80
+    to_port   = 80
+    protocol  = "tcp"
 
     cidr_blocks = [
       "10.0.0.0/16",
-      "192.168.0.0/16"
+      "192.168.0.0/16",
     ]
   }
 
@@ -81,13 +81,13 @@ resource "aws_security_group" "networking_sg" {
   }
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
+    from_port = 80
+    to_port   = 80
+    protocol  = "tcp"
 
     cidr_blocks = [
       "10.0.0.0/16",
-      "172.16.0.0/16"
+      "172.16.0.0/16",
     ]
   }
 
