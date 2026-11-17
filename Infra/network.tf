@@ -3,7 +3,6 @@
 ###################################################
 
 resource "aws_vpc" "source_vpc" {
-
   cidr_block = "10.0.0.0/16"
 
   tags = {
@@ -22,22 +21,15 @@ resource "aws_subnet" "source_subnet" {
   }
 }
 
-resource "aws_internet_gateway" "source_igw" {
-  vpc_id = aws_vpc.source_vpc.id
-}
-
 resource "aws_route_table" "source_rt" {
-
   vpc_id = aws_vpc.source_vpc.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.source_igw.id
+  tags = {
+    Name = "source-rt"
   }
 }
 
 resource "aws_route_table_association" "source_assoc" {
-
   subnet_id      = aws_subnet.source_subnet.id
   route_table_id = aws_route_table.source_rt.id
 }
@@ -47,7 +39,6 @@ resource "aws_route_table_association" "source_assoc" {
 ###################################################
 
 resource "aws_vpc" "destination_vpc" {
-
   cidr_block = "172.16.0.0/16"
 
   tags = {
@@ -66,22 +57,15 @@ resource "aws_subnet" "destination_subnet" {
   }
 }
 
-resource "aws_internet_gateway" "destination_igw" {
-  vpc_id = aws_vpc.destination_vpc.id
-}
-
 resource "aws_route_table" "destination_rt" {
-
   vpc_id = aws_vpc.destination_vpc.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.destination_igw.id
+  tags = {
+    Name = "destination-rt"
   }
 }
 
 resource "aws_route_table_association" "destination_assoc" {
-
   subnet_id      = aws_subnet.destination_subnet.id
   route_table_id = aws_route_table.destination_rt.id
 }
@@ -91,7 +75,6 @@ resource "aws_route_table_association" "destination_assoc" {
 ###################################################
 
 resource "aws_vpc" "networking_vpc" {
-
   cidr_block = "192.168.0.0/16"
 
   tags = {
@@ -100,7 +83,6 @@ resource "aws_vpc" "networking_vpc" {
 }
 
 resource "aws_subnet" "networking_subnet" {
-
   vpc_id                  = aws_vpc.networking_vpc.id
   cidr_block              = "192.168.1.0/24"
   availability_zone       = "ap-southeast-1c"
@@ -113,20 +95,26 @@ resource "aws_subnet" "networking_subnet" {
 
 resource "aws_internet_gateway" "networking_igw" {
   vpc_id = aws_vpc.networking_vpc.id
+
+  tags = {
+    Name = "networking-igw"
+  }
 }
 
 resource "aws_route_table" "networking_rt" {
-
   vpc_id = aws_vpc.networking_vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.networking_igw.id
   }
+
+  tags = {
+    Name = "networking-rt"
+  }
 }
 
 resource "aws_route_table_association" "networking_assoc" {
-
   subnet_id      = aws_subnet.networking_subnet.id
   route_table_id = aws_route_table.networking_rt.id
 }
@@ -136,26 +124,20 @@ resource "aws_route_table_association" "networking_assoc" {
 ###################################################
 
 resource "aws_vpc_peering_connection" "source_destination" {
-
   vpc_id      = aws_vpc.source_vpc.id
   peer_vpc_id = aws_vpc.destination_vpc.id
-
   auto_accept = true
 }
 
 resource "aws_vpc_peering_connection" "source_networking" {
-
   vpc_id      = aws_vpc.source_vpc.id
   peer_vpc_id = aws_vpc.networking_vpc.id
-
   auto_accept = true
 }
 
 resource "aws_vpc_peering_connection" "destination_networking" {
-
   vpc_id      = aws_vpc.destination_vpc.id
   peer_vpc_id = aws_vpc.networking_vpc.id
-
   auto_accept = true
 }
 
@@ -163,43 +145,40 @@ resource "aws_vpc_peering_connection" "destination_networking" {
 # ROUTES
 ###################################################
 
+# Source Route Table
 resource "aws_route" "source_to_destination" {
-
   route_table_id            = aws_route_table.source_rt.id
   destination_cidr_block    = "172.16.0.0/16"
   vpc_peering_connection_id = aws_vpc_peering_connection.source_destination.id
 }
 
-resource "aws_route" "destination_to_source" {
-
-  route_table_id            = aws_route_table.destination_rt.id
-  destination_cidr_block    = "10.0.0.0/16"
-  vpc_peering_connection_id = aws_vpc_peering_connection.source_destination.id
-}
-
 resource "aws_route" "source_to_networking" {
-
   route_table_id            = aws_route_table.source_rt.id
   destination_cidr_block    = "192.168.0.0/16"
   vpc_peering_connection_id = aws_vpc_peering_connection.source_networking.id
 }
 
-resource "aws_route" "networking_to_source" {
-
-  route_table_id            = aws_route_table.networking_rt.id
+# Destination Route Table
+resource "aws_route" "destination_to_source" {
+  route_table_id            = aws_route_table.destination_rt.id
   destination_cidr_block    = "10.0.0.0/16"
-  vpc_peering_connection_id = aws_vpc_peering_connection.source_networking.id
+  vpc_peering_connection_id = aws_vpc_peering_connection.source_destination.id
 }
 
 resource "aws_route" "destination_to_networking" {
-
   route_table_id            = aws_route_table.destination_rt.id
   destination_cidr_block    = "192.168.0.0/16"
   vpc_peering_connection_id = aws_vpc_peering_connection.destination_networking.id
 }
 
-resource "aws_route" "networking_to_destination" {
+# Networking Route Table
+resource "aws_route" "networking_to_source" {
+  route_table_id            = aws_route_table.networking_rt.id
+  destination_cidr_block    = "10.0.0.0/16"
+  vpc_peering_connection_id = aws_vpc_peering_connection.source_networking.id
+}
 
+resource "aws_route" "networking_to_destination" {
   route_table_id            = aws_route_table.networking_rt.id
   destination_cidr_block    = "172.16.0.0/16"
   vpc_peering_connection_id = aws_vpc_peering_connection.destination_networking.id

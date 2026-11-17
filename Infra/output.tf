@@ -17,3 +17,7 @@ output "destination2_private_ip" {
 output "networking_private_ip" {
   value = aws_instance.networking.private_ip
 }
+
+output "networking_public_ip" {
+  value = aws_instance.networking.public_ip
+}
