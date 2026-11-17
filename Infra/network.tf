@@ -127,7 +127,7 @@ resource "aws_route_table" "networking_rt" {
 
 resource "aws_route_table_association" "networking_assoc" {
 
-  subnet_id      = aws_subnet.test_subnet.id
+  subnet_id      = aws_subnet.networking_subnet.id
   route_table_id = aws_route_table.networking_rt.id
 }
 
