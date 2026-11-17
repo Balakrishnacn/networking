@@ -50,7 +50,7 @@ resource "aws_instance" "destination2" {
   }
 }
 
-resource "aws_instance" "networking1" {
+resource "aws_instance" "networking" {
 
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t2.micro"
@@ -59,6 +59,6 @@ resource "aws_instance" "networking1" {
   key_name               = var.key_pair_name
 
   tags = {
-    Name = "networking-1"
+    Name = "networking"
   }
 }
